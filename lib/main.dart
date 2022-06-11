@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+//import 'package:storage1/classes/Storage.dart';
+import 'classes/Storage.dart';
 
 void main() {
   runApp(MyApp());
@@ -11,21 +13,14 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-String name = '';
-late SharedPreferences preferences;
 
   @override
   void initState() {
     super.initState();
-
-    init();
-  }
-
-  Future init() async {
-    preferences = await SharedPreferences.getInstance();
   }
   
-  
+  Storage storage = Storage();
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -38,25 +33,47 @@ late SharedPreferences preferences;
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(name),
+              Text(storage.str),
               const SizedBox(height:32),
+
+
+
+
+              // SET COOKIE
               ElevatedButton(   
                 onPressed: () async  {
-                  preferences.setString('name','felix');  
+                  storage.cookie.setString('name','Peter');  
                 },
-                child: Text('Store'),
+                child: Text('Store Name'), // change to: fruit, color, name, etc.
               ),
 
+
+
+              // READ COOKIE
               ElevatedButton(   
                 onPressed: () async  {
-                  String? name = preferences.getString('name');  
-                  if (name == null) return;
-                  setState(() {
-                    this.name = name;
-                  });
+                  String? crumb = storage.cookie.getString('fruit');  
+                  if (crumb == null) return;
+                  setState(() { storage.str = crumb; });
                 },
-                child: Text('Load'),
-              )              
+                child: Text('Load Fruit'),
+              ),
+              ElevatedButton(   
+                onPressed: () async  {
+                  String? crumb = storage.cookie.getString('name');  
+                  if (crumb == null) return;
+                  setState(() { storage.str = crumb; });
+                },
+                child: Text('Load Name'),
+              ),
+              ElevatedButton(   
+                onPressed: () async  {
+                  String? crumb = storage.cookie.getString('color');  
+                  if (crumb == null) return;
+                  setState(() { storage.str = crumb; });
+                },
+                child: Text('Load Color'),
+              )                 
             ],
           ),
         ),
