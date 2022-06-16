@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 //import 'package:storage1/classes/Storage.dart';
-import 'classes/Storage.dart';
+import 'classes/Stored.dart';
 
 void main() {
   runApp(MyApp());
@@ -33,7 +33,8 @@ class _MyAppState extends State<MyApp> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(storage.str),
+              Text('name = "${ storage.name }"'),
+              Text('count = "${ storage.count.toString() }"'),
               const SizedBox(height:32),
 
 
@@ -42,38 +43,38 @@ class _MyAppState extends State<MyApp> {
               // SET COOKIE
               ElevatedButton(   
                 onPressed: () async  {
-                  storage.cookie.setString('name','Peter');  
+                  storage.prefs.setString('name','Charlie 1');  
                 },
                 child: Text('Store Name'), // change to: fruit, color, name, etc.
               ),
-
+              ElevatedButton(   
+                onPressed: () async  {
+                  storage.prefs.setInt('count',15);  
+                },
+                child: Text('Store number'), // change to: fruit, color, name, etc.
+              ),
 
 
               // READ COOKIE
               ElevatedButton(   
                 onPressed: () async  {
-                  String? crumb = storage.cookie.getString('fruit');  
-                  if (crumb == null) return;
-                  setState(() { storage.str = crumb; });
+                  String? _name = storage.prefs.getString('name');  
+                  int? _count = storage.prefs.getInt('count');  
+                  if (_name == null) {
+                    _name = '';
+                  }
+                  if (_count == null) {
+                    _count = 0;
+                  }                  
+                  setState(() { 
+                    storage.name = _name!;
+                    // bump it up
+                    storage.count = _count! +1;  
+                    storage.prefs.setInt('count',storage.count);
+                  });
                 },
-                child: Text('Load Fruit'),
+                child: Text('Load Prefs'),
               ),
-              ElevatedButton(   
-                onPressed: () async  {
-                  String? crumb = storage.cookie.getString('name');  
-                  if (crumb == null) return;
-                  setState(() { storage.str = crumb; });
-                },
-                child: Text('Load Name'),
-              ),
-              ElevatedButton(   
-                onPressed: () async  {
-                  String? crumb = storage.cookie.getString('color');  
-                  if (crumb == null) return;
-                  setState(() { storage.str = crumb; });
-                },
-                child: Text('Load Color'),
-              )                 
             ],
           ),
         ),
